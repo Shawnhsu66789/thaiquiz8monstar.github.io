@@ -14,6 +14,9 @@
         .btn:hover { background: rgba(255, 255, 255, 0.2); transform: translateY(-2px); border-color: #fbbf24; }
         .progress-container { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-bottom: 20px; }
         .progress-bar { height: 100%; background: #fbbf24; transition: width 0.3s; }
+        /* 結果圖優化 */
+        .result-img-container { width: 100%; display: flex; justify-content: center; margin: 20px 0; }
+        .result-img { width: 100%; max-width: 320px; height: auto; border-radius: 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); border: 2px solid rgba(251, 191, 36, 0.3); }
         .result-card { background: rgba(251, 191, 36, 0.1); border-left: 4px solid #fbbf24; padding: 15px; margin: 20px 0; border-radius: 0 12px 12px 0; }
     </style>
 </head>
@@ -23,14 +26,14 @@
 
     <script>
         const questions = [
-            { q: "Q1. 好不容易約好聚餐，但在選餐廳時群組一片死寂，你會？", a: "直接丟出這家：「就吃饗泰多吧，我想吃！」", b: "默默潛水，想說應該會有更熱心的人出來主導吧？", c: "丟出兩個不同風格的選項發起投票，看大家反應。", d: "開始焦慮大家是不是不想去？還是我上次推薦的太難吃？", scores: [1,2,3,4] },
-            { q: "Q2. 點餐時，綠咖哩標示兩根辣椒(中辣)，但你不太能吃辣，你會？", a: "可以點啊，但我不會吃，哼~", b: "看其他朋友能不能吃，我跟著大家就好。", c: "詢問店員：「這道可以做微辣嗎？」", d: "腦中瘋狂運算：會不會拉肚子？會不會顯得我很挑剔？", scores: [1,2,3,4] },
+            { q: "Q1. 好不容易約好週五晚上聚餐，但在選餐廳時群組一片死寂，你會？", a: "直接丟出這家：「就吃饗泰多吧，我想吃！」", b: "默默潛水，想說應該會有更熱心的人出來主導吧？", c: "丟出兩個不同風格的選項發起投票，看大家反應。", d: "開始焦慮大家是不是不想去？還是我上次推薦的太難吃？", scores: [1,2,3,4] },
+            { q: "Q2. 點餐時，菜單上那道「椰香綠咖哩雞」標示兩根辣椒(中辣)，但你不太能吃辣，你會？", a: "可以點阿，但我不會吃，哼~", b: "看其他朋友能不能吃，我跟著大家就好。", c: "詢問店員：「這道可以做微辣嗎？」", d: "腦中瘋狂運算：會不會拉肚子？會不會顯得我很挑剔？", scores: [1,2,3,4] },
             { q: "Q3. 菜上齊了發現你是唯一沒拿手機拍照的人，你會？", a: "直接夾肉：「餓死了你們慢慢拍，這塊我要了！」", b: "尷尬放下筷子，低頭玩手機等大家拍完。", c: "主動幫忙打燈或喬角度，當攝影指導。", d: "內心驚慌：我現在夾菜會不會顯得不合群？", scores: [1,2,3,4] },
             { q: "Q4. 服務生送錯菜了，這道不是你們點的，你會？", a: "沒差啦！這道看起來也很好吃，就吃吧！", b: "看大家反應，如果沒人講話就默默吃掉。", c: "禮貌提醒服務生送錯了，並核對一下帳單。", d: "內心糾結：要講嗎？講了服務生會不會被扣錢？", scores: [1,2,3,4] },
             { q: "Q5. 聚餐中朋友突然開始抱怨工作，氣氛變沉重，你會？", a: "強行轉移話題：「欸這蝦餅超厚！快趁熱吃！」", b: "點頭附和：「真的辛苦了～」然後繼續吃菜。", c: "適時講一個自己更慘的故事來緩和氣氛。", d: "擔心輪到自己講時，話題會不會變得很無聊？", scores: [1,2,3,4] },
             { q: "Q6. 剩最後一塊月亮蝦餅，大家都停下筷子，你會？", a: "「沒人要吃喔？那我吃囉！」直接夾走。", b: "其實很想吃但不敢夾，推說：「我飽了。」", c: "用公筷把蝦餅切成四份，大家平分。", d: "想夾又怕被覺得貪吃，不夾又覺得浪費...", scores: [1,2,3,4] },
             { q: "Q7. 結帳發現比預期貴了200元，你會？", a: "沒差啦！吃得爽最重要，錢再賺就有。", b: "心痛但不敢表現，默默掏出皮夾付錢。", c: "快速心算檢查帳單，確認是否有漏掉折扣。", d: "回家路上一直想：早知道就不多點那杯椰子汁了。", scores: [1,2,3,4] },
-            { q: "Q8. 隔壁桌客人講話超級大聲，吵到你們聊天，你會？", a: "直接瞪過去，或講話比他們更大聲。", b: "忍耐，把身體往前傾，努力聽朋友說話。", c: "請服務生幫忙提醒隔壁桌：「不好意思聲音小一點。」", d: "煩躁想：是不是我選錯餐廳了？大家一定很不開心。", scores: [1,2,3,4] },
+            { q: "Q8. 隔邊桌客人講話超級大聲，吵到你們聊天，你會？", a: "直接瞪過去，或講話比他們更大聲。", b: "忍耐，把身體往前傾，努力聽朋友說話。", c: "請服務生幫忙提醒隔壁桌：「不好意思聲音小一點。」", d: "煩躁想：是不是我選錯餐廳了？大家一定很不開心。", scores: [1,2,3,4] },
             { q: "Q9. 解散時大家說「下次再約」，你心想？", a: "「好啊！下次去吃火鍋！」(已經在想下一頓)", b: "「好喔～」(知道下次約成可能是半年後)", c: "立刻開行事曆問大家：「下個月哪天有空？」", d: "反省剛剛揮手姿勢是不是太僵硬？有沒有說錯話？", scores: [1,2,3,4] },
             { q: "Q10. 收到朋友私訊說「今天謝謝主揪」，你會？", a: "回個貼圖，或簡單回句：「OK」", b: "回傳：「不會不會，大家開心最重要！」", c: "順勢把剛剛修好的大合照傳到群組。", d: "反覆推敲：這句是真心還是客套？我有招待不周嗎？", scores: [1,2,3,4] }
         ];
@@ -53,8 +56,8 @@
                 const q = questions[current];
                 el.innerHTML = `
                     <div class="progress-container"><div class="progress-bar" style="width:${(current/questions.length)*100}%"></div></div>
-                    <p class="text-xs text-amber-400 font-bold mb-2">QUESTION ${current + 1}</p>
-                    <h2 class="text-lg font-bold mb-6 leading-tight">${q.q}</h2>
+                    <p class="text-xs text-amber-400 font-bold mb-2 text-center uppercase tracking-widest">Question ${current + 1}</p>
+                    <h2 class="text-lg font-bold mb-6 text-center leading-relaxed">${q.q}</h2>
                     <button class="btn" onclick="next(0)">${q.a}</button>
                     <button class="btn" onclick="next(1)">${q.b}</button>
                     <button class="btn" onclick="next(2)">${q.c}</button>
@@ -63,14 +66,25 @@
             } else {
                 const res = results.find(r => score >= r.range[0] && score <= r.range[1]);
                 el.innerHTML = `
-                    <p class="text-amber-400 font-bold mb-1">聚餐人格分析結果</p>
-                    <h1 class="text-3xl font-black mb-4">${res.title}</h1>
-                    <div class="result-card text-sm leading-relaxed">${res.desc}</div>
-                    <div class="p-4 bg-white/5 rounded-lg border border-white/10 mt-4">
-                        <p class="text-xs opacity-50 mb-1">【 靈魂飯友配對 】</p>
-                        <p class="font-bold text-pink-400 text-lg">${res.match}</p>
+                    <div class="text-center">
+                        <p class="text-amber-400 font-bold mb-1 tracking-widest">聚餐人格分析結果</p>
+                        <h1 class="text-3xl font-black mb-4">${res.title}</h1>
+                        
+                        <div class="result-img-container">
+                            <img src="img/result_${res.type}.png" alt="${res.title}" class="result-img">
+                        </div>
+
+                        <div class="result-card text-sm leading-relaxed text-left">
+                            ${res.desc}
+                        </div>
+                        
+                        <div class="p-4 bg-white/5 rounded-lg border border-white/10 mt-4 text-left">
+                            <p class="text-xs opacity-50 mb-1">【 靈魂飯友配對 】</p>
+                            <p class="font-bold text-pink-400 text-lg">${res.match}</p>
+                        </div>
+                        
+                        <button onclick="location.reload()" class="mt-8 w-full py-4 bg-amber-500 hover:bg-amber-400 text-white rounded-xl font-bold transition shadow-lg">重新測驗</button>
                     </div>
-                    <button onclick="location.reload()" class="mt-8 w-full py-4 bg-amber-500 hover:bg-amber-400 text-white rounded-xl font-bold transition">重新測驗</button>
                 `;
             }
         }
