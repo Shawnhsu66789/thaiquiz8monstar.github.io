@@ -22,9 +22,8 @@
             justify-content: center;
         }
 
-        /* 測驗中與結果頁的毛玻璃容器 */
         .quiz-container { 
-            background: rgba(26, 26, 46, 0.85); 
+            background: rgba(26, 26, 46, 0.9); 
             backdrop-filter: blur(12px); 
             border: 1px solid rgba(255, 255, 255, 0.1); 
             border-radius: 30px; 
@@ -34,7 +33,6 @@
             box-shadow: 0 25px 50px rgba(0,0,0,0.6);
         }
 
-        /* 起始頁專用：不使用黑底容器 */
         .start-page {
             width: 100%;
             max-width: 500px;
@@ -45,55 +43,71 @@
             padding: 20px;
         }
 
-        /* 進度條設計 */
-        .progress-wrapper { position: relative; width: 100%; height: 45px; margin-bottom: 20px; }
-        .progress-container { position: absolute; bottom: 10px; width: 100%; height: 6px; background: rgba(255,255,255,0.15); border-radius: 10px; }
+        /* 進度條與大象 */
+        .progress-wrapper { position: relative; width: 100%; height: 60px; margin-bottom: 20px; }
+        .progress-container { position: absolute; bottom: 10px; width: 100%; height: 8px; background: rgba(255,255,255,0.15); border-radius: 10px; }
         .progress-bar { height: 100%; background: linear-gradient(90deg, #a78bfa, #f472b6); border-radius: 10px; transition: width 0.4s ease; }
         .elephant-icon { 
             position: absolute; top: 0; width: 45px; height: 45px; 
-            transition: left 0.4s ease; transform: translateX(-50%); z-index: 5;
+            transition: left 0.4s ease; transform: translateX(-50%); 
+            z-index: 5; animation: elephantWalk 1s infinite ease-in-out;
+        }
+        @keyframes elephantWalk {
+            0%, 100% { transform: translateX(-50%) rotate(-5deg); }
+            50% { transform: translateX(-50%) rotate(5deg); }
         }
 
-        /* 紫色動態按鈕 */
+        /* 按鈕樣式 */
         .btn-purple {
             width: 100%; padding: 16px; margin-bottom: 15px;
-            background: rgba(167, 139, 250, 0.2);
-            border: 2px solid rgba(167, 139, 250, 0.5);
-            border-radius: 16px; color: #ddd6fe; font-size: 16px; font-weight: 500;
+            background: rgba(167, 139, 250, 0.15);
+            border: 1px solid rgba(167, 139, 250, 0.4);
+            border-radius: 16px; color: #ddd6fe; font-size: 16px;
             transition: all 0.3s ease;
         }
-        .btn-purple:hover {
-            background: rgba(167, 139, 250, 0.4);
-            border-color: #c084fc;
-            color: white;
-            transform: scale(1.03);
-        }
+        .btn-purple:hover { background: rgba(167, 139, 250, 0.35); border-color: #a78bfa; color: white; transform: scale(1.02); }
 
-        /* 起始與重新開始按鈕：帶有呼吸動畫 */
         .btn-action {
-            background: #a78bfa; color: #1e1b4b; font-weight: bold; padding: 18px 40px;
+            background: #a78bfa; color: #1e1b4b; font-weight: bold; padding: 16px 40px;
             border-radius: 50px; border: none; font-size: 18px; cursor: pointer;
-            animation: pulse 2s infinite; transition: 0.3s;
+            animation: pulsePurple 2s infinite; transition: 0.3s; width: 100%;
         }
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.7); }
+        @keyframes pulsePurple {
+            0% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.6); }
             70% { box-shadow: 0 0 0 15px rgba(167, 139, 250, 0); }
             100% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0); }
         }
-        .btn-action:hover { background: #c084fc; transform: translateY(-3px); }
 
-        .logo-top { width: 140px; margin-bottom: 40px; }
-        .title-img { width: 100%; max-width: 380px; margin-bottom: 50px; }
-        .result-img { width: 100%; border-radius: 20px; margin-bottom: 25px; }
-        .logo-bottom { width: 110px; margin-top: 30px; opacity: 0.8; }
+        /* 次要按鈕：複製連結 */
+        .btn-outline {
+            background: transparent; color: #a78bfa; border: 1px solid #a78bfa;
+            padding: 12px 20px; border-radius: 50px; font-size: 14px; width: 100%; margin-top: 15px;
+            transition: 0.3s;
+        }
+        .btn-outline:hover { background: rgba(167, 139, 250, 0.1); }
+
+        /* 結果頁圖片提示 */
+        .share-hint {
+            font-size: 13px; color: #a78bfa; margin-top: 10px; margin-bottom: 20px;
+            animation: hintFade 1.5s infinite alternate;
+        }
+        @keyframes hintFade { from { opacity: 0.4; } to { opacity: 1; } }
+
+        .logo-top { width: 150px; margin-bottom: 40px; }
+        .title-img { width: 100%; max-width: 400px; margin-bottom: 50px; }
+        .result-img { 
+            width: 100%; border-radius: 20px; margin-bottom: 10px; 
+            -webkit-touch-callout: default; /* 確保 iOS 可以長按存圖 */
+        }
+        .logo-bottom { width: 120px; margin-top: 30px; opacity: 0.8; }
     </style>
 </head>
 <body>
     <div id="app" class="w-full flex justify-center">
         <div class="start-page">
-            <img src="imgs/logo 2.svg" class="logo-top" alt="Logo Top">
-            <img src="imgs/title.png" class="title-img" alt="Title">
-            <button onclick="startQuiz()" class="btn-action">開始測驗</button>
+            <img src="imgs/logo 2.svg" class="logo-top">
+            <img src="imgs/title.png" class="title-img">
+            <button onclick="startQuiz()" class="btn-action" style="max-width: 250px;">開始測驗</button>
         </div>
     </div>
 
@@ -104,7 +118,7 @@
             { q: "Q3. 菜上齊了發現你是唯一沒拿手機拍照的人，你會？", a: "直接夾肉：「餓死了你們慢慢拍，這塊我要了！」", b: "尷尬放下筷子，低頭玩手機等大家拍完。", c: "主動幫忙打燈或喬角度，當攝影指導。", d: "內心驚慌：我現在夾菜會不會顯得不合群？", scores: [1,2,3,4] },
             { q: "Q4. 服務生送錯菜了，這道不是你們點的，你會？", a: "沒差啦！這道看起來也很好吃，就吃吧！", b: "看大家反應，如果沒人講話就默默吃掉。", c: "禮貌提醒服務生送錯了，並核對一下帳單。", d: "內心糾結：要講嗎？講了服務生會不會被扣錢？", scores: [1,2,3,4] },
             { q: "Q5. 聚餐中朋友突然開始抱怨工作，氣氛變沉重，你會？", a: "強行轉移話題：「欸這蝦餅超厚！快趁熱吃！」", b: "點頭附和：「真的辛苦了～」然後繼續吃菜。", c: "適時講一個自己更慘的故事來緩和氣氛。", d: "擔心輪到自己講時，話題會不會變得很無聊？", scores: [1,2,3,4] },
-            { q: "Q6. 剩最後一塊月亮蝦餅，大家都停下筷子，你會？", a: "「沒人要吃喔？那我吃囉！」直接夾走。", b: "其實很想吃但不敢夾，推說：「我飽了。」", c: "用公筷把蝦餅切成四份，大家平分。", d: "想夾又怕被覺得貪吃，不夾又覺得浪費...", scores: [1,2,3,4] },
+            { q: "Q6. 剩最後一塊月亮蝦餅，大家都停下筷子，你會？", a: "「沒人要吃喔？那我吃囉！」直接夾走。", b: "其實很想吃關係但不敢夾，推說：「我飽了。」", c: "用公筷把蝦餅切成四份，大家平分。", d: "想夾又怕被覺得貪吃，不夾又覺得浪費...", scores: [1,2,3,4] },
             { q: "Q7. 結帳發現比預期貴了200元，你會？", a: "沒差啦！吃得爽最重要，錢再賺就有。", b: "心痛但不敢表現，默默掏出皮夾付錢。", c: "快速心算檢查帳單，確認是否有漏掉折扣。", d: "回家路上一直想：早知道就不多點那杯椰子汁了。", scores: [1,2,3,4] },
             { q: "Q8. 隔壁桌客人講話超級大聲，吵到你們聊天，你會？", a: "直接瞪過去，或講話比他們更大聲。", b: "忍耐，把身體往前傾，努力聽朋友說話。", c: "請服務生幫忙提醒隔壁桌：「不好意思聲音小一點。」", d: "煩躁想：是不是我選錯餐廳了？大家一定很不開心。", scores: [1,2,3,4] },
             { q: "Q9. 解散時大家說「下次再約」，你心想？", a: "「好啊！下次去吃火鍋！」(已經在想下一頓)", b: "「好喔～」(知道下次約成可能是半年後)", c: "立刻開行事曆問大家：「下個月哪天有空？」", d: "反省剛剛揮手姿勢是不是太僵硬？有沒有說錯話？", scores: [1,2,3,4] },
@@ -114,10 +128,13 @@
         let current = 0;
         let score = 0;
 
-        function startQuiz() {
-            current = 0;
-            score = 0;
-            render();
+        function startQuiz() { current = 0; score = 0; render(); }
+
+        function copyLink() {
+            const url = window.location.href;
+            navigator.clipboard.writeText(url).then(() => {
+                alert("測驗連結已複製，快傳給朋友玩吧！");
+            });
         }
 
         function render() {
@@ -130,9 +147,7 @@
                     <div class="quiz-container">
                         <div class="progress-wrapper">
                             <img src="imgs/elephant.png" class="elephant-icon" style="left: ${progress}%">
-                            <div class="progress-container">
-                                <div class="progress-bar" style="width: ${progress}%"></div>
-                            </div>
+                            <div class="progress-container"><div class="progress-bar" style="width: ${progress}%"></div></div>
                         </div>
                         <h2 class="text-xl font-bold mb-8 text-center text-purple-100 leading-relaxed">${q.q}</h2>
                         <button class="btn-purple" onclick="next(0)">${q.a}</button>
@@ -151,21 +166,21 @@
 
                 el.innerHTML = `
                     <div class="quiz-container text-center">
-                        <img src="imgs/results/result_${type}.png" class="result-img shadow-2xl" alt="結果圖">
-                        <button onclick="location.reload()" class="btn-action">再玩一次</button>
-                        <div class="flex justify-center">
-                            <img src="imgs/logo 2.svg" class="logo-bottom" alt="Footer Logo">
+                        <img src="imgs/results/result_${type}.png" class="result-img shadow-2xl">
+                        <p class="share-hint">☝️ 長按圖片即可儲存或分享</p>
+                        
+                        <div class="mt-4 space-y-3">
+                            <button onclick="location.reload()" class="btn-action">再玩一次</button>
+                            <button onclick="copyLink()" class="btn-outline">🔗 複製測驗連結</button>
                         </div>
+
+                        <div class="flex justify-center"><img src="imgs/logo 2.svg" class="logo-bottom"></div>
                     </div>
                 `;
             }
         }
 
-        function next(idx) {
-            score += questions[current].scores[idx];
-            current++;
-            render();
-        }
+        function next(idx) { score += questions[current].scores[idx]; current++; render(); }
     </script>
 </body>
 </html>
