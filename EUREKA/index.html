@@ -1,60 +1,87 @@
 <!-- @format -->
 
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="./styles/style.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="icon" href="./imgs/Eureka.png" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@700&display=swap"
-      rel="stylesheet"
-    />
-    <title>Eureka！</title>
-  </head>
-  <body>
-    <main>
-      <div class="eureka">
-        <div class="title">
-          <div class="top">
-            <div class="leftLine line"></div>
-            <div class="font fade-in"><img src="./imgs/Eureka.png" alt="" /></div>
-            <div class="rightLine line"></div>
-          </div>
-          <div class="middle">
-            <img class="plan" src="./imgs/回游計畫/大標.png" alt="" />
-          </div>
-          <div class="bottom">
-            <div class="longLine"></div>
-            <div class="titleText">
-              <div>你像哪個哲學家？</div>
-            </div>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>你的大腦有多「泰」？聚餐人格測驗</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: radial-gradient(circle, #1a1a2e 0%, #16213e 100%); color: white; font-family: sans-serif; min-height: 100vh; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; }
+        .option-btn { transition: all 0.3s; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .option-btn:hover { background: rgba(255, 255, 255, 0.2); transform: translateY(-2px); }
+        .progress-bar { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+        .progress-inner { height: 100%; background: #fbbf24; transition: width 0.3s; }
+    </style>
+</head>
+<body class="flex items-center justify-center p-4">
+    <div id="quiz-app" class="glass max-w-lg w-full p-8 shadow-2xl">
+        </div>
 
-            <div class="startBtn">
-               
-               <div class="startTitle">
-                <img class="startImg" src="./imgs/button.png" alt="" >
-                 <div class="gameStart">開始洄游</div>
+    <script>
+        const questions = [
+            { q: "Q1. 選餐廳時群組一片死寂，你會？", options: [{t:"直接丟出這家：就吃饗泰多吧！", s:1}, {t:"默默潛水，等熱心人主導", s:2}, {t:"丟出兩個選項發起投票", s:3}, {t:"焦慮大家是不是不想去", s:4}] },
+            { q: "Q2. 點了中辣但你不太能吃辣，你會？", options: [{t:"沒差點下去！大不了狂喝水", s:1}, {t:"看大家能不能吃，我跟著吃", s:2}, {t:"詢問店員能否做微辣", s:3}, {t:"腦中瘋狂運算會不會脫妝痛肚子", s:4}] },
+            { q: "Q3. 發現你是唯一沒拿手機拍照的人，你會？", options: [{t:"直接夾肉：餓死了你們慢慢拍", s:1}, {t:"尷尬放下筷子等大家拍完", s:2}, {t:"主動打燈喬角度當攝影指導", s:3}, {t:"內心驚慌是不是顯得不合群", s:4}] },
+            { q: "Q4. 服務生送錯菜了，你會？", options: [{t:"沒差啦！這道也好吃就吃吧", s:1}, {t:"看大家反應，沒人講話就默默吃", s:2}, {t:"禮貌提醒送錯了，請確認帳單", s:3}, {t:"不敢講怕服務生被罵或朋友不開心", s:4}] },
+            { q: "Q5. 朋友抱怨工作氣氛沉重，你會？", options: [{t:"轉移話題：欸這蝦餅超厚！", s:1}, {t:"點頭附和：真的辛苦了～繼續吃", s:2}, {t:"講自己更慘的故事來緩和氣氛", s:3}, {t:"擔心輪到自己講會不會被比較", s:4}] },
+            { q: "Q6. 剩最後一塊月亮蝦餅，你會？", options: [{t:"沒人要吃喔？那我吃囉！", s:1}, {t:"想吃也不敢夾，推說飽了", s:2}, {t:"用公筷切成四份大家平分", s:3}, {t:"想夾又怕被覺得貪吃，不夾又浪費", s:4}] },
+            { q: "Q7. 結帳發現比預期貴了200元，你會？", options: [{t:"直接付掉，好吃再賺就有", s:1}, {t:"心痛但不敢表現，默默付錢", s:2}, {t:"快速檢查帳單有沒有算錯", s:3}, {t:"回家路上一直想早知道不點椰子汁", s:4}] },
+            { q: "Q8. 隔壁桌客人講話超級大聲，你會？", options: [{t:"直接瞪過去或講話比他們大聲", s:1}, {t:"忍耐，把身體前傾聽朋友說話", s:2}, {t:"請服務生幫忙提醒隔壁桌", s:3}, {t:"煩躁想是不是選錯餐廳大家不盡興", s:4}] },
+            { q: "Q9. 解散時大家說「下次再約」，你心想？", options: [{t:"下次去吃火鍋！", s:1}, {t:"好喔～（知道下次可能是半年後）", s:2}, {t:"立刻開行事曆問下個月哪天有空", s:3}, {t:"剛剛揮手姿勢是不是太僵硬很假", s:4}] },
+            { q: "Q10. 收到朋友傳訊說謝謝主揪，你會？", options: [{t:"回個貼圖或「OK」", s:1}, {t:"回傳「不會不會大家開心就好」", s:2}, {t:"順勢把修好的合照傳到群組", s:3}, {t:"檢查這句話是不是客套，有招待不周？", s:4}] }
+        ];
+
+        const results = [
+            { range: [10, 15], type: "A", title: "冠軍月亮蝦餅人", desc: "你是典型的「想太少」，直率行動派！在你眼裡，猶豫就是對食物的不尊重。", match: "Type F 濃郁綠咖哩人" },
+            { range: [16, 21], type: "B", title: "清香檸檬魚人", desc: "口頭禪是「都好、看你們」，溫柔隨和的和平主義者。", match: "Type E 黃咖哩軟殼蟹人" },
+            { range: [22, 27], type: "C", title: "泰式奶茶人", desc: "情商極高的社交高手，聚餐中的氣氛擔當與潤滑劑。", match: "Type D 冬蔭功湯人" },
+            { range: [28, 32], type: "D", title: "冬蔭功湯人", desc: "愛恨分明、有個性，雖然敏感但充滿熱情的感官主義者。", match: "Type C 泰式奶茶人" },
+            { range: [33, 37], type: "E", title: "黃咖哩軟殼蟹人", desc: "追求完美的細節控計畫通，外剛內柔，確保大家不踩雷。", match: "Type B 清香檸檬魚人" },
+            { range: [38, 40], type: "F", title: "濃郁綠咖哩人", desc: "恭喜獲得「想泰多」冠軍！內心戲炸裂，細膩到讓人心疼。", match: "Type A 冠軍月亮蝦餅人" }
+        ];
+
+        let currentStep = 0;
+        let score = 0;
+
+        function render() {
+            const app = document.getElementById('quiz-app');
+            if (currentStep < questions.length) {
+                const item = questions[currentStep];
+                const progress = ((currentStep / questions.length) * 100);
+                app.innerHTML = `
+                    <div class="progress-bar mb-6"><div class="progress-inner" style="width: ${progress}%"></div></div>
+                    <p class="text-xs opacity-50 mb-2">QUESTION ${currentStep + 1} / 10</p>
+                    <h2 class="text-xl font-bold mb-6">${item.q}</h2>
+                    ${item.options.map(opt => `<button onclick="handleNext(${opt.s})" class="option-btn w-full p-4 mb-3 glass text-left text-sm hover:bg-white hover:text-black">${opt.t}</button>`).join('')}
+                `;
+            } else {
+                showResult();
+            }
+        }
+
+        function handleNext(s) {
+            score += s;
+            currentStep++;
+            render();
+        }
+
+        function showResult() {
+            const result = results.find(r => score >= r.range[0] && score <= r.range[1]);
+            document.getElementById('quiz-app').innerHTML = `
+                <p class="text-amber-400 font-bold mb-2">你的聚餐人格是...</p>
+                <h1 class="text-3xl font-black mb-4">${result.title}</h1>
+                <div class="p-4 bg-white/10 rounded-lg mb-6 text-sm leading-relaxed">${result.desc}</div>
+                <div class="border-t border-white/20 pt-4">
+                    <p class="text-xs opacity-70">【靈魂飯友配對】</p>
+                    <p class="text-lg font-bold text-pink-400">${result.match}</p>
                 </div>
-            </div>
-            </div>
-            </div>
-          </div>
-        </div>
-        <div class="cloud">
-          <img class="leftCloud" src="./imgs/雲/左.png" alt="">
-          <img src="./imgs/雲/飛船.png" alt="" class="boat">
-          <img class="midCloud" src="./imgs/雲/中.png" alt="">
-          <img class="rightCloud" src="./imgs/雲/右.png" alt="">
-        </div>
-      </div>
-    </main> 
-
-
-    <script src="app.js" charset="UTF-8"></script>
-    <script src="app1.js" charset="UTF-8"></script>
-  </body>
+                <button onclick="location.reload()" class="mt-8 w-full py-3 bg-amber-500 rounded-full font-bold">重新測驗</button>
+            `;
+        }
+        render();
+    </script>
+</body>
 </html>
